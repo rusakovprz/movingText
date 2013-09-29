@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Конфигурационный файл медиаплеера с функцией показа бегущей строки -->
+<!-- Редакция 0.2.0 / 10.04.2013 -->
+
+<!-- корневой узел, признак, содержащихся в файле данных-->
+<config>
+
+  <!-- список видеофайлов для показа -->
+  <playlist>
+    <file name = "1.avi"/>
+    <file name = "2.avi"/>
+  </playlist>
+
+  <!-- список текстов для бегущей строки -->
+  <!-- параметры бегущей строки -->
+  <textlist timeout="10" size="20" pos="750">
+    <textcolor r="255" g="0" b="0"/>
+    <backgroundcolor r="0" g="255" b="255"/>
+
+    <string>string1</string>  
+    <string>string2</string>
+    <string>string3</string>
+    <string>string4</string>
+  </textlist>
+
+  <!-- Путь к лог-файлу -->
+  <logfile pathname="log.txt" />
+
+</config>
+
