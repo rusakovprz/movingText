@@ -40,6 +40,7 @@ int main(int argc, char **argv)
   signal(SIGHUP, _Signal);
  
   QApplication app(argc, argv);
+  app.setApplicationName("Media player");
   app.setOverrideCursor(QCursor(QPixmap(cursor_xpm)));
   MainWindow mainWin( 0, 0, confName );
   mainWin.showFullScreen();
