@@ -24,6 +24,8 @@ public:
   MainWindow(QWidget *parent = 0,
              Qt::WindowFlags flags = 0, 
              QString configName = QString("config_default.xml"));
+  
+  ~MainWindow();
 
 public slots:
 

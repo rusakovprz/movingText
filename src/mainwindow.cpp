@@ -44,6 +44,15 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags, QString configNam
 }
 
 
+MainWindow::~MainWindow()
+{
+  delete config;
+  delete media;
+  delete vwidget;
+  delete audioOutput;
+}
+
+
 void MainWindow::start()
 {
   config->parser();
