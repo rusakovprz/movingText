@@ -28,7 +28,7 @@ TransparentWidget::TransparentWidget(QWidget *parent)
 void TransparentWidget::paintEvent( QPaintEvent * event )
 { 
   QRect rectangle(0, 0, this->size().width()-1, this->size().height()-1);
-	painter =  new QPainter(this);
+	QPainter* painter =  new QPainter(this);
 	painter->setBrush(this->backgroundColor);
 	painter->setPen(this->backgroundColor);
 	painter->drawRect(rectangle);
@@ -36,6 +36,7 @@ void TransparentWidget::paintEvent( QPaintEvent * event )
   painter->setFont(QFont("Helvetica [Cronyx]", textSize));
 	painter->drawText(pos_x, this->size().height()-15, currentString );
   painter->end();
+  delete painter;
 }
 
 

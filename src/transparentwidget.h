@@ -41,7 +41,6 @@ private:
 
   void updateConfData();
   
-  QPainter *painter;
   void paintEvent( QPaintEvent * event );
   QWidget *m_parent;
   
