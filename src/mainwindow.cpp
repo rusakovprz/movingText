@@ -11,7 +11,7 @@
 
 static QString logFileName;
 QString getCurrentTime();
-void myMessageOutput(QtMsgType type, const char *msg);
+void messageOutput(QtMsgType type, const char *msg);
 
 
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags, QString configName)
@@ -59,7 +59,7 @@ void MainWindow::start()
 
   logFileName = config->getLogFileName();
     
-  qInstallMsgHandler(myMessageOutput);
+  qInstallMsgHandler(messageOutput);
   
   qDebug() << getCurrentTime() << "Start applications";
   this->runVideo();
@@ -153,7 +153,7 @@ QString getCurrentTime()
 }
 
 
-void myMessageOutput(QtMsgType type, const char *msg)
+void messageOutput(QtMsgType type, const char *msg)
 {
   QFile logFile(logFileName);
 
