@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags, QString configNam
   setWindowTitle("Media player");
   
   configFileName = configName;
-  config = new ParserConfig(configFileName);
+  config = new ParserConfig(configFileName, this);
   
   media = new Phonon::MediaObject(this);
   vwidget = new VWidget(this);
@@ -41,15 +41,6 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags, QString configNam
 
   QTimer::singleShot(10, this, SLOT(start()));
 
-}
-
-
-MainWindow::~MainWindow()
-{
-  delete config;
-  delete media;
-  delete vwidget;
-  delete audioOutput;
 }
 
 

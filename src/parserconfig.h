@@ -17,7 +17,7 @@ class ParserConfig : public QObject
 
 public:
 
-   ParserConfig(QString fileName);
+   ParserConfig(QString fileName, QObject *parent);
 
    void parser();
 

@@ -8,8 +8,9 @@
 #include "parserconfig.h"
 
 
-ParserConfig::ParserConfig(QString fileName)
-                :m_fileName(),
+ParserConfig::ParserConfig(QString fileName, QObject *parent = 0):
+                QObject(parent),                
+                m_fileName(),
                 logFileName("mpmt_log.txt"),
                 playList(),
                 textList(),
