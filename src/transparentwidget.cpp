@@ -37,6 +37,11 @@ void TransparentWidget::paintEvent( QPaintEvent * event )
 	painter->drawText(pos_x, this->size().height()-15, currentString );
   painter->end();
   delete painter;
+  
+  // С целью избежать предупреждения во время компиляции:
+  // параметр «event» не используется [-Wunused-parameter]
+  if (event){};
+  
 }
 
 
