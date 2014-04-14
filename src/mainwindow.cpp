@@ -9,8 +9,10 @@
 #include <QDateTime>
 #include "mainwindow.h"
 
-static QString logFileName;
+
+static QFile logFile;
 void messageOutput(QtMsgType type, const char *msg); 
+void setLogFile(QString fileName);
 QString getCurrentTime();
 
 
@@ -43,13 +45,17 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags, QString configNam
 
 }
 
+MainWindow::~MainWindow()
+{
+  if(logFile.isOpen())
+    logFile.close();
+}
+
 
 void MainWindow::start()
 {
   config->parser();
-
-  logFileName = config->getLogFileName();
-    
+  setLogFile( config->getLogFileName() );
   qInstallMsgHandler(messageOutput);
   
   qDebug() << getCurrentTime() << "Start applications";
@@ -61,7 +67,7 @@ void MainWindow::start()
 void MainWindow::reSet()
 {
   config->parser();
-  logFileName = config->getLogFileName();
+  setLogFile( config->getLogFileName() );
   vwidget->tv->setConfig(config);
 }
 
@@ -144,14 +150,26 @@ QString getCurrentTime()
 }
 
 
-void messageOutput(QtMsgType type, const char *msg)
+void setLogFile(QString fileName)
 {
-  QFile logFile(logFileName);
+  if(logFile.isOpen())
+    logFile.close();
+
+  logFile.setFileName(fileName);
 
   if (!logFile.open(QFile::WriteOnly | QFile::Text | QIODevice::Append))
   {
-    qCritical() << QObject::tr("Cannot open file %1").arg(logFileName); 
+    qCritical() << QObject::tr("Cannot open file %1").arg(fileName); 
   };
+}
+
+
+
+void messageOutput(QtMsgType type, const char *msg)
+{
+
+  if(!logFile.isOpen())
+    return;
   
   QTextStream logStream(&logFile);
 
