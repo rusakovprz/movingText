@@ -10,8 +10,8 @@
 #include "mainwindow.h"
 
 static QString logFileName;
+void messageOutput(QtMsgType type, const char *msg); 
 QString getCurrentTime();
-void messageOutput(QtMsgType type, const char *msg);
 
 
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags, QString configName)
@@ -157,21 +157,16 @@ void messageOutput(QtMsgType type, const char *msg)
 
   switch (type) {
   case QtDebugMsg:
-   //fprintf(stderr, "%s\n", msg);
-   logStream << msg << "\n" << flush;
-   break;
+    logStream << msg << "\n" << flush;
+    break;
   case QtWarningMsg:
-    //fprintf(stderr, "Warning: %s\n", msg);
-    //logStream << "Warning: " << msg << "\n";
+    fprintf(stderr, "Warning: %s\n", msg);
     break;
   case QtCriticalMsg:
     fprintf(stderr, "Critical: %s\n", msg);
-    //logStream << "Critical: " << msg << "\n";
     break;
   case QtFatalMsg:
     fprintf(stderr, "Fatal: %s\n", msg);
-    //logStream << "Fatal: " << msg << "\n";
-    //abort();
   }
 }
 
