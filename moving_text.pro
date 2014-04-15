@@ -13,13 +13,14 @@ QT += phonon xml
 HEADERS += src/mainwindow.h \
             src/vwidget.h \
             src/transparentwidget.h \
-            src/parserconfig.h
+            src/parserconfig.h \
+            src/logging.h
             
 SOURCES += src/main.cpp src/mainwindow.cpp \
             src/vwidget.cpp \
             src/transparentwidget.cpp \
-            src/parserconfig.cpp  
-
+            src/parserconfig.cpp \
+            src/logging.cpp
 
 OBJECTS_DIR += moc_obj/
 MOC_DIR += moc_obj/

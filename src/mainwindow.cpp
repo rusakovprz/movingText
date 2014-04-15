@@ -6,14 +6,8 @@
 
 #include <stdio.h>
 #include <QColor>
-#include <QDateTime>
 #include "mainwindow.h"
-
-
-static QFile logFile;
-void messageOutput(QtMsgType type, const char *msg); 
-void setLogFile(QString fileName);
-QString getCurrentTime();
+#include "logging.h"
 
 
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags, QString configName)
@@ -47,18 +41,17 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags, QString configNam
 
 MainWindow::~MainWindow()
 {
-  if(logFile.isOpen())
-    logFile.close();
+  logging::closeLogFile();
 }
 
 
 void MainWindow::start()
 {
   config->parser();
-  setLogFile( config->getLogFileName() );
-  qInstallMsgHandler(messageOutput);
+  logging::setLogFile( config->getLogFileName() );
+  qInstallMsgHandler(logging::messageOutput);
   
-  qDebug() << getCurrentTime() << "Start applications";
+  qDebug() << logging::getCurrentTime() << "Start applications";
   this->runVideo();
   this->runText();
 }
@@ -67,7 +60,7 @@ void MainWindow::start()
 void MainWindow::reSet()
 {
   config->parser();
-  setLogFile( config->getLogFileName() );
+  logging::setLogFile( config->getLogFileName() );
   vwidget->tv->setConfig(config);
 }
 
@@ -83,14 +76,14 @@ void MainWindow::runVideo()
 
     if (!isMediaFile(playList.at(i)))
     {
-      qDebug() << getCurrentTime() << playList.at(i) << " no media file.";
+      qDebug() << logging::getCurrentTime() << playList.at(i) << " no media file.";
       continue;
     }   
   
     QFile file(playList.at(i));
     if (!file.open(QIODevice::ReadOnly))
     {
-      qDebug() << getCurrentTime() << "No such file or directory: " << playList.at(i);
+      qDebug() << logging::getCurrentTime() << "No such file or directory: " << playList.at(i);
       continue;
     };
     
@@ -123,11 +116,11 @@ void MainWindow::printState( Phonon::State newstate, Phonon::State oldstate )
   if(newstate == 2)
   {
     currentFileName = src.fileName();
-    qDebug() << getCurrentTime() << " Begin playing file: " << currentFileName;
+    qDebug() << logging::getCurrentTime() << " Begin playing file: " << currentFileName;
   };  
     
   if(newstate == 0 || newstate == 4)
-    qDebug() << getCurrentTime() << " Stop playing file: " << currentFileName;
+    qDebug() << logging::getCurrentTime() << " Stop playing file: " << currentFileName;
   
 }
 
@@ -142,50 +135,4 @@ bool MainWindow::isMediaFile(QString filename)
 
   return false;
 }
-
-
-QString getCurrentTime()
-{
-  return QDateTime().currentDateTime().toString("hh:mm:ss_dd-MM-yyyy");
-}
-
-
-void setLogFile(QString fileName)
-{
-  if(logFile.isOpen())
-    logFile.close();
-
-  logFile.setFileName(fileName);
-
-  if (!logFile.open(QFile::WriteOnly | QFile::Text | QIODevice::Append))
-  {
-    qCritical() << QObject::tr("Cannot open file %1").arg(fileName); 
-  };
-}
-
-
-
-void messageOutput(QtMsgType type, const char *msg)
-{
-
-  if(!logFile.isOpen())
-    return;
-  
-  QTextStream logStream(&logFile);
-
-  switch (type) {
-  case QtDebugMsg:
-    logStream << msg << "\n" << flush;
-    break;
-  case QtWarningMsg:
-    fprintf(stderr, "Warning: %s\n", msg);
-    break;
-  case QtCriticalMsg:
-    fprintf(stderr, "Critical: %s\n", msg);
-    break;
-  case QtFatalMsg:
-    fprintf(stderr, "Fatal: %s\n", msg);
-  }
-}
-
 

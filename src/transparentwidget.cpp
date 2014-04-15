@@ -9,6 +9,7 @@
 #include <QFont>
 #include <QDebug>
 #include "transparentwidget.h"
+#include "logging.h"
 
 QString getCurrentTime(); // in file:  mainwindow.cpp
 
@@ -161,7 +162,7 @@ void TransparentWidget::nextPos()
 
   if (pos_x < 0-lenImageString)
   {
-    qDebug() << getCurrentTime() << "End drawing text";
+    qDebug() << logging::getCurrentTime() << "End drawing text";
     this->nextString();
     return;
   }
@@ -174,6 +175,6 @@ void TransparentWidget::nextPos()
 
 void TransparentWidget::putToLogNextText()
 {
-  qDebug() << getCurrentTime() << "Begin drawing text = " << currentString;
+  qDebug() << logging::getCurrentTime() << "Begin drawing text = " << currentString;
 }
 
