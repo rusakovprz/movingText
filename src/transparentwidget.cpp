@@ -11,14 +11,12 @@
 #include "transparentwidget.h"
 #include "logging.h"
 
-QString getCurrentTime(); // in file:  mainwindow.cpp
 
-TransparentWidget::TransparentWidget(QWidget *parent)
-    : QLabel(parent),
-    currentString(),
-    lenImageString(0)
+TransparentWidget::TransparentWidget(QWidget *parent):
+                                        QLabel(parent),
+                                        m_currentString(),
+                                        m_lenImageString(0)
 {
-  qDebug() << "constructor TransparentWidget";
   m_parent = parent;
 
   this->setTextPos(10);
@@ -30,12 +28,12 @@ void TransparentWidget::paintEvent( QPaintEvent * event )
 { 
   QRect rectangle(0, 0, this->size().width()-1, this->size().height()-1);
 	QPainter* painter =  new QPainter(this);
-	painter->setBrush(this->backgroundColor);
-	painter->setPen(this->backgroundColor);
+	painter->setBrush(m_backgroundColor);
+	painter->setPen(m_backgroundColor);
 	painter->drawRect(rectangle);
-  painter->setPen(this->textColor);
-  painter->setFont(QFont("Helvetica [Cronyx]", textSize));
-	painter->drawText(pos_x, this->size().height()-15, currentString );
+  painter->setPen(m_textColor);
+  painter->setFont(QFont("Helvetica [Cronyx]", m_textSize));
+	painter->drawText(m_pos_x, this->size().height()-15, m_currentString );
   painter->end();
   delete painter;
   
@@ -54,54 +52,51 @@ void TransparentWidget::setTextPos(int pos)
 
 void TransparentWidget::setTextSize(int size)
 {
-
-  textSize = size;
+  m_textSize = size;
   QSize s = this->size();
   this->resize(s.width(), size+20);
-  
 }
 
 
 void TransparentWidget::setTextColor(QColor text, QColor  background)
 {
-  this->textColor = text;
-  this->backgroundColor = background;
-  
+  m_textColor = text;
+  m_backgroundColor = background;
 }
 
 
 void TransparentWidget::setTextList(QStringList list)
 {
-  this->textList = list;
+  this->m_textList = list;
 }
 
 
 void TransparentWidget::setTextTimeout(int timeout)
 {
-  this->textTimeout = timeout;
+  m_textTimeout = timeout;
 }
 
 
 void TransparentWidget::setConfig(ParserConfig *conf)
 {
-  this->config = conf;
+  m_config = conf;
 }
 
 
 void TransparentWidget::updateConfData()
 {
-  this->setTextPos(config->getTextPos());
-  this->setTextColor(config->getTextColor(), config->getBackgroundColor());
-  this->setTextSize(config->getTextSize());
-  this->setTextList(config->getTextList());
-  this->setTextTimeout(config->getTextTimeout());
+  this->setTextPos(m_config->getTextPos());
+  this->setTextColor(m_config->getTextColor(), m_config->getBackgroundColor());
+  this->setTextSize(m_config->getTextSize());
+  this->setTextList(m_config->getTextList());
+  this->setTextTimeout(m_config->getTextTimeout());
 }
 
 void TransparentWidget::start()
 {
   this->updateConfData();
 
-  if (textList.size() == 0)
+  if (m_textList.size() == 0)
     return;
 
   this->firstString();
@@ -109,21 +104,21 @@ void TransparentWidget::start()
 
 void TransparentWidget::reStart()
 {
-  if (textList.size() == 0)
+  if (m_textList.size() == 0)
     return;
   
-  currentIndexString = -1;
+  m_currentIndexString = -1;
 }
 
 
 void TransparentWidget::firstString()
 {
-  currentIndexString = 0;
+  m_currentIndexString = 0;
  
-  pos_x = m_parent->size().width()+1;
-  currentString = textList.at(currentIndexString);
-  int s = currentString.size();
-  lenImageString = s*textSize*0.53;
+  m_pos_x = m_parent->size().width()+1;
+  m_currentString = m_textList.at(m_currentIndexString);
+  int s = m_currentString.size();
+  m_lenImageString = s*m_textSize*0.53;
 
   putToLogNextText();
   nextPos();
@@ -133,34 +128,33 @@ void TransparentWidget::firstString()
 void TransparentWidget::nextString()
 {
   this->hide();
-  currentIndexString++;
+  m_currentIndexString++;
   
-  if (this->textList.size() <= currentIndexString)
+  if (this->m_textList.size() <= m_currentIndexString)
   {  
      // достигли конца списка текстов
     // обновить данные из конфига
     this->updateConfData();
       
-    currentIndexString = 0;
+    m_currentIndexString = 0;
   }
 
 
-  pos_x = m_parent->size().width()+1;
-  currentString = textList.at(currentIndexString);
-  int s = currentString.size();
-  lenImageString = s*textSize*0.53;
+  m_pos_x = m_parent->size().width()+1;
+  m_currentString = m_textList.at(m_currentIndexString);
+  int s = m_currentString.size();
+  m_lenImageString = s*m_textSize*0.53;
   
-  QTimer::singleShot(this->textTimeout, this, SLOT(nextPos()));
-  QTimer::singleShot(this->textTimeout, this, SLOT(putToLogNextText()));
-
+  QTimer::singleShot(m_textTimeout, this, SLOT(nextPos()));
+  QTimer::singleShot(m_textTimeout, this, SLOT(putToLogNextText()));
 }   
 
 
 void TransparentWidget::nextPos()
 {
-  pos_x--;
+  m_pos_x--;
 
-  if (pos_x < 0-lenImageString)
+  if (m_pos_x < 0-m_lenImageString)
   {
     qDebug() << logging::getCurrentTime() << "End drawing text";
     this->nextString();
@@ -175,6 +169,6 @@ void TransparentWidget::nextPos()
 
 void TransparentWidget::putToLogNextText()
 {
-  qDebug() << logging::getCurrentTime() << "Begin drawing text = " << currentString;
+  qDebug() << logging::getCurrentTime() << "Begin drawing text = " << m_currentString;
 }
 

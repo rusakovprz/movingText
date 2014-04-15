@@ -44,20 +44,19 @@ private:
   void paintEvent( QPaintEvent * event );
   QWidget *m_parent;
   
-  QStringList textList;
-  QColor textColor;
-  QColor backgroundColor;
-  int textSize;
+  QStringList m_textList;
+  QColor m_textColor;
+  QColor m_backgroundColor;
+  int m_textSize;
 
-  QString currentString;
-  int currentIndexString;
-  int pos_x;
-  int lenImageString;
-  int textTimeout;
-  ParserConfig *config;
+  QString m_currentString;
+  int m_currentIndexString;
+  int m_pos_x;
+  int m_lenImageString;
+  int m_textTimeout;
+  ParserConfig *m_config;
 
 };
 
 #endif
-
 
