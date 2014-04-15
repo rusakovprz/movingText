@@ -11,6 +11,7 @@
 
 static MainWindow *objWindow = NULL;
 
+
 static void _Signal(int sig)
 {
   fprintf(stderr, "signal: %i\n", sig);
@@ -25,12 +26,10 @@ static const char * cursor_xpm[] = {
 "  ",};
 
 
-
 int main(int argc, char **argv)
 {
-  //qDebug("argc: %i\n", argc);
- 
   QString confName;
+
   if (argc < 2)
     confName = "config.xml";
   else
@@ -49,5 +48,4 @@ int main(int argc, char **argv)
 
   return app.exec();
 }
-
 
