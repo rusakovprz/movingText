@@ -7,6 +7,9 @@
 **
 ****************************************************************************/
 
+#ifndef LOGGING_H
+#define LOGGING_H
+
 #include <QFile>
 
 
@@ -23,4 +26,6 @@ namespace logging
   QString getCurrentTime();
 
 };
+
+#endif
 
