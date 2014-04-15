@@ -11,6 +11,7 @@
 #include <Phonon/VideoWidget>
 #include "transparentwidget.h"
 
+
 class VWidget : public Phonon::VideoWidget
 {
       Q_OBJECT
@@ -27,5 +28,4 @@ private:
 };
 
 #endif
-
 

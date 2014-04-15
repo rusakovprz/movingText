@@ -7,6 +7,7 @@
 #include <QColor>
 #include "vwidget.h"
 
+
 VWidget::VWidget(QWidget *parent)
     : Phonon::VideoWidget(parent)
 {
@@ -20,5 +21,4 @@ void VWidget::resizeEvent( QResizeEvent * event )
   int height = tv->height();
   tv->resize(size.width(), height);
 }
-
 
