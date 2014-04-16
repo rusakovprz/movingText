@@ -10,29 +10,29 @@
 
 ParserConfig::ParserConfig(QString fileName, QObject *parent = 0):
                 QObject(parent),                
-                m_fileName(),
-                logFileName("mpmt_log.txt"),
-                playList(),
-                textList(),
-                textColor(0,0,0),
-                backgroundColor(255,255,255),
-                textTimeout(100),
-                textSize(1000),
-                textPos(20)
-{
-  m_fileName = fileName;
-}
+                m_fileName(fileName),
+                m_logFileName("mpmt_log.txt"),
+                m_playList(),
+                m_textList(),
+                m_textColor(0,0,0),
+                m_backgroundColor(255,255,255),
+                m_textTimeout(100),
+                m_textSize(10),
+                m_textPos(20)
+{ }
+
 
 void ParserConfig::parser()
 {
-  playList.clear();
-  textList.clear();
+  m_playList.clear();
+  m_textList.clear();
 
   if (m_fileName.isEmpty())
     return;
 
   QFile file(m_fileName);
-  if (!file.open(QFile::ReadOnly | QFile::Text)) {
+  if (!file.open(QFile::ReadOnly | QFile::Text))
+  {
     qCritical() << tr("Cannot read file %1: %2.")
                                    .arg(m_fileName)
                                    .arg(file.errorString());
@@ -44,14 +44,16 @@ void ParserConfig::parser()
 	QString errorMsg;
 	int errorLine(0), errorColumn(0);
 
- 	if (!doc.setContent(&file, &errorMsg, &errorLine, &errorColumn )) {
+ 	if (!doc.setContent(&file, &errorMsg, &errorLine, &errorColumn ))
+ 	{
      file.close();
      qCritical() << trUtf8("Error: [%1], row [%2], column [%3]")
-                  .arg(errorMsg)
-				                    .arg(errorLine)
-     			                                  .arg(errorColumn);
+                                                  .arg(errorMsg)
+				                                          .arg(errorLine)
+     			                                        .arg(errorColumn);
      return;
  	}
+ 	
  	file.close();
 
 	QDomElement root = doc.documentElement();
@@ -59,10 +61,11 @@ void ParserConfig::parser()
 
 	if (root.tagName() == "config")
 		qDebug() << trUtf8("File contain config data.");
-  else {     
-        qWarning() << trUtf8("Error. File no contain config data.");
-        return;
-        };
+  else 
+  {     
+    qWarning() << trUtf8("Error. File no contain config data.");
+    return;
+  };
         
 	QDomNodeList nodelist = doc.elementsByTagName( "file" );
 	qDebug() << trUtf8("Match media files = %1 ").arg(nodelist.length());
@@ -76,11 +79,11 @@ void ParserConfig::parser()
 		if ( node.isElement() )
 		{
 			element = node.toElement();
-      playList.append(element.attribute("name"));
+      m_playList.append(element.attribute("name"));
 		};
 	};
 
-  qDebug() << "playList " << playList;
+  qDebug() << "playList " << m_playList;
  
 	nodelist = doc.elementsByTagName( "string" );
 	qDebug() << trUtf8(" Match nodes <string> = %1 ").arg(nodelist.length ());
@@ -91,11 +94,11 @@ void ParserConfig::parser()
 		if ( node.isElement() )
 		{
 			element = node.toElement();
-      textList.append(element.text());
+      m_textList.append(element.text());
 		};
 	};
 
-  qDebug() << "textList " << textList;
+  qDebug() << "textList " << m_textList;
 
   int r, g, b;
 
@@ -106,10 +109,10 @@ void ParserConfig::parser()
     r = QString(element.attribute("r")).toInt();
     g = QString(element.attribute("g")).toInt();
     b = QString(element.attribute("b")).toInt();
-    textColor = QColor( r, g, b );
+    m_textColor = QColor( r, g, b );
   };
 
-  qDebug() << "textColor = " << textColor;
+  qDebug() << "textColor = " << m_textColor;
 
   nodelist = doc.elementsByTagName( "backgroundcolor" );
   if (nodelist.length() > 0) {
@@ -118,33 +121,32 @@ void ParserConfig::parser()
     r = QString(element.attribute("r")).toInt();
     g = QString(element.attribute("g")).toInt();
     b = QString(element.attribute("b")).toInt();
-    backgroundColor = QColor( r, g, b );
+    m_backgroundColor = QColor( r, g, b );
   };
 
-  qDebug() << "backgroundcolor = " << backgroundColor;
+  qDebug() << "backgroundcolor = " << m_backgroundColor;
 
   nodelist = doc.elementsByTagName( "logfile" );
   if (nodelist.length() > 0) {
     node = nodelist.item(0);
     element = node.toElement();
-    logFileName = element.attribute("pathname");
+    m_logFileName = element.attribute("pathname");
   };
 
-  qDebug() << "logFileName = " << logFileName;    
+  qDebug() << "logFileName = " << m_logFileName;    
  
   nodelist = doc.elementsByTagName( "textlist" );
   if (nodelist.length() > 0) {
     node = nodelist.item(0);
     element = node.toElement();
-    textTimeout = QString( element.attribute("timeout") ).toInt()*1000;
-    textSize      = QString( element.attribute("size") ).toInt();
-    textPos      = QString( element.attribute("pos") ).toInt();
+    m_textTimeout = QString( element.attribute("timeout") ).toInt()*1000;
+    m_textSize      = QString( element.attribute("size") ).toInt();
+    m_textPos      = QString( element.attribute("pos") ).toInt();
   };
 
-  qDebug() << "textTimeout = " << textTimeout; 
-  qDebug() << "textSize = " << textSize;
-  qDebug() << "textPos = " << textPos;
+  qDebug() << "textTimeout = " << m_textTimeout; 
+  qDebug() << "textSize = " << m_textSize;
+  qDebug() << "textPos = " << m_textPos;
 
 }
-
 

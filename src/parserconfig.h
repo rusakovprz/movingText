@@ -11,38 +11,39 @@
 #include<QString> 
 #include<QDebug>
 
+
 class ParserConfig : public QObject
 {
     Q_OBJECT
 
 public:
 
-   ParserConfig(QString fileName, QObject *parent);
+  ParserConfig(QString fileName, QObject *parent);
 
-   void parser();
+  void parser();
 
-  QString getLogFileName(){ return logFileName; };
-  QStringList getPlayList(){ return playList; };
-  QStringList getTextList(){ return textList; };
-  QColor getTextColor(){ return textColor; };
-  QColor getBackgroundColor(){ return backgroundColor; };
-  int getTextTimeout(){ return textTimeout; };
-  int getTextSize(){ return textSize; };
-  int getTextPos(){ return textPos; };
+  QString getLogFileName(){ return m_logFileName; };
+  QStringList getPlayList(){ return m_playList; };
+  QStringList getTextList(){ return m_textList; };
+  QColor getTextColor(){ return m_textColor; };
+  QColor getBackgroundColor(){ return m_backgroundColor; };
+  int getTextTimeout(){ return m_textTimeout; };
+  int getTextSize(){ return m_textSize; };
+  int getTextPos(){ return m_textPos; };
 
 private:
+
   QString m_fileName;
-  QString logFileName;
-  QStringList playList;
-  QStringList textList;
-  QColor textColor;
-  QColor backgroundColor;
-  int textTimeout;
-  int textSize;
-  int textPos;
+  QString m_logFileName;
+  QStringList m_playList;
+  QStringList m_textList;
+  QColor m_textColor;
+  QColor m_backgroundColor;
+  int m_textTimeout;
+  int m_textSize;
+  int m_textPos;
 
 };
 
 #endif
-
 
