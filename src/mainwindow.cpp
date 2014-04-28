@@ -17,18 +17,18 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags, QString configNam
   
   m_config = new ParserConfig(configName, this);
   
-  media = new Phonon::MediaObject(this);
+  m_mediaObject = new Phonon::MediaObject(this);
   vwidget = new VWidget(this);
   this->setCentralWidget(vwidget); 
-  Phonon::createPath(media, (Phonon::MediaNode*)vwidget);
+  Phonon::createPath(m_mediaObject, (Phonon::MediaNode*)vwidget);
  
-  connect(media, SIGNAL(finished ()), this, SLOT(stop()));
+  connect(m_mediaObject, SIGNAL(finished ()), this, SLOT(stop()));
   
-  connect(media, SIGNAL(stateChanged ( Phonon::State, Phonon::State) ),
+  connect(m_mediaObject, SIGNAL(stateChanged ( Phonon::State, Phonon::State) ),
        this, SLOT(printState( Phonon::State, Phonon::State) ));
   
-  audioOutput = new Phonon::AudioOutput(Phonon::VideoCategory, this);
-  Phonon::createPath(media, audioOutput);
+  m_audioOutput = new Phonon::AudioOutput(Phonon::VideoCategory, this);
+  Phonon::createPath(m_mediaObject, m_audioOutput);
 
   m_mediaFileList << ".avi" << ".AVI" << ".mp4" << ".MP4" << ".mpg" << ".MPG" << ".mpeg" << ".MPEG" 
                 << ".3gp" << ".3GP" << ".mkv" << ".MKV" << ".flv" << ".FLV" << ".mov" << ".MOV" 
@@ -66,7 +66,7 @@ void MainWindow::reSet()
 
 void MainWindow::runVideo()
 {
-  media->clear();
+  m_mediaObject->clear();
   
   QStringList playList = m_config->getPlayList();
 
@@ -86,11 +86,11 @@ void MainWindow::runVideo()
       continue;
     };
     
-    src = Phonon::MediaSource(playList.at(i));
-    media->enqueue(src);
+    m_mediaSource = Phonon::MediaSource(playList.at(i));
+    m_mediaObject->enqueue(m_mediaSource);
   };
   
-  media->play();
+  m_mediaObject->play();
 }
 
 
@@ -110,11 +110,11 @@ void MainWindow::stop()
 void MainWindow::printState( Phonon::State newstate, Phonon::State oldstate )
 {
   if (oldstate){};
-  Phonon::MediaSource src = media->currentSource();
+  Phonon::MediaSource source = m_mediaObject->currentSource();
 
   if(newstate == 2)
   {
-    m_currentFileName = src.fileName();
+    m_currentFileName = source.fileName();
     qDebug() << logging::getCurrentTime() << " Begin playing file: " << m_currentFileName;
   };  
     
