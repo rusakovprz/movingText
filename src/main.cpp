@@ -3,7 +3,9 @@
 ** 
 ****************************************************************************/
 
+#ifdef __linux__
 #include <signal.h>
+#endif
 #include <QApplication>
 #include <qdebug.h>
 #include "mainwindow.h"
@@ -12,11 +14,13 @@
 static MainWindow *objWindow = NULL;
 
 
+#ifdef __linux__
 static void _Signal(int sig)
 {
   fprintf(stderr, "signal: %i\n", sig);
   objWindow->reSet();
 }
+#endif
 
 
 static const char * cursor_xpm[] = {
@@ -35,8 +39,10 @@ int main(int argc, char **argv)
   else
     confName = argv[1];
 
+#ifdef __linux__
   signal(SIGUSR1, _Signal);
   signal(SIGHUP, _Signal);
+#endif
  
   QApplication app(argc, argv);
   app.setApplicationName("Media player");
