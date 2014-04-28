@@ -10,13 +10,12 @@
 #include "logging.h"
 
 
-MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags, QString configName)
-    : QMainWindow(parent, flags)
+MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags, QString configName):
+                                                      QMainWindow(parent, flags)
 {
   setWindowTitle("Media player");
   
-  configFileName = configName;
-  config = new ParserConfig(configFileName, this);
+  m_config = new ParserConfig(configName, this);
   
   media = new Phonon::MediaObject(this);
   vwidget = new VWidget(this);
@@ -31,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags, QString configNam
   audioOutput = new Phonon::AudioOutput(Phonon::VideoCategory, this);
   Phonon::createPath(media, audioOutput);
 
-  mediaFileList << ".avi" << ".AVI" << ".mp4" << ".MP4" << ".mpg" << ".MPG" << ".mpeg" << ".MPEG" 
+  m_mediaFileList << ".avi" << ".AVI" << ".mp4" << ".MP4" << ".mpg" << ".MPG" << ".mpeg" << ".MPEG" 
                 << ".3gp" << ".3GP" << ".mkv" << ".MKV" << ".flv" << ".FLV" << ".mov" << ".MOV" 
                 << ".swf" << ".SWF" << ".vob" << ".VOB" << ".wmv" << ".WMV";   
 
@@ -47,8 +46,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::start()
 {
-  config->parser();
-  logging::setLogFile( config->getLogFileName() );
+  m_config->parser();
+  logging::setLogFile( m_config->getLogFileName() );
   qInstallMsgHandler(logging::messageOutput);
   
   qDebug() << logging::getCurrentTime() << "Start applications";
@@ -59,9 +58,9 @@ void MainWindow::start()
                 
 void MainWindow::reSet()
 {
-  config->parser();
-  logging::setLogFile( config->getLogFileName() );
-  vwidget->tv->setConfig(config);
+  m_config->parser();
+  logging::setLogFile( m_config->getLogFileName() );
+  vwidget->tv->setConfig(m_config);
 }
 
 
@@ -69,7 +68,7 @@ void MainWindow::runVideo()
 {
   media->clear();
   
-  QStringList playList = config->getPlayList();
+  QStringList playList = m_config->getPlayList();
 
   for(int i=0; i<playList.size(); i++ )
   {
@@ -97,7 +96,7 @@ void MainWindow::runVideo()
 
 void MainWindow::runText()
 {
-  vwidget->tv->setConfig(config);
+  vwidget->tv->setConfig(m_config);
   vwidget->tv->start();
 }
 
@@ -115,21 +114,21 @@ void MainWindow::printState( Phonon::State newstate, Phonon::State oldstate )
 
   if(newstate == 2)
   {
-    currentFileName = src.fileName();
-    qDebug() << logging::getCurrentTime() << " Begin playing file: " << currentFileName;
+    m_currentFileName = src.fileName();
+    qDebug() << logging::getCurrentTime() << " Begin playing file: " << m_currentFileName;
   };  
     
   if(newstate == 0 || newstate == 4)
-    qDebug() << logging::getCurrentTime() << " Stop playing file: " << currentFileName;
+    qDebug() << logging::getCurrentTime() << " Stop playing file: " << m_currentFileName;
   
 }
 
 
 bool MainWindow::isMediaFile(QString filename)
 {
-  for (int i= 0; i< mediaFileList.size(); i++)
+  for (int i= 0; i< m_mediaFileList.size(); i++)
   {
-    if (filename.right(mediaFileList.at(i).length()) == mediaFileList.at(i))
+    if (filename.right(m_mediaFileList.at(i).length()) == m_mediaFileList.at(i))
       return true;
   }
 

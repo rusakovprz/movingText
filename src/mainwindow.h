@@ -37,14 +37,13 @@ public slots:
 private:
 
   Phonon::MediaObject *media;
-  VWidget *vwidget;
   Phonon::AudioOutput *audioOutput;
   Phonon::MediaSource src;
+  VWidget *vwidget;
   
-  QString configFileName;
-  ParserConfig *config;
-  QString currentFileName;
-  QStringList mediaFileList;
+  ParserConfig *m_config;
+  QString m_currentFileName;
+  QStringList m_mediaFileList;
   
   void runVideo();
   void runText();
@@ -53,5 +52,4 @@ private:
 };
 
 #endif
-
 
